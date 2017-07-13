@@ -1,0 +1,48 @@
+import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
+
+apply plugin: 'com.android.application'
+apply plugin: "androidsvgdrawable"
+
+android {
+  compileSdkVersion 26
+  buildToolsVersion "26.0.0"
+  defaultConfig {
+    applicationId "debug.friesenkiwi.de.pnggeneratetest"
+    minSdkVersion 15
+    targetSdkVersion 26
+    versionCode 1
+    versionName "1.0"
+  }
+
+}
+
+// create a task to convert SVG to PNG DRAWABLE
+task svgToDrawablePng(type: SvgDrawableTask) {
+  // specify where to pick SVG from
+  from = files('src/main/svg-png')
+  // specify the android res folder
+  to = file('src/main/res')
+  // create qualified directories if missing
+  createMissingDirectories = true
+  // override files only if necessary
+  overwriteMode = 'ifModified'
+  // let generate PNG for the following densities only
+  // if none specified, all densities will be used
+  targetedDensities = ['ldpi', 'hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
+
+  // output format of the generated resources
+  outputFormat = 'PNG'
+  // output type is drawable (default)
+  outputType = 'mipmap'
+
+  // this is an experimental feature
+  // it allow composition of SVG two generate resources for multiple combinations
+  svgMaskFiles = files('src/main/svg-png/mask')
+  svgMaskResourceFiles = files('src/main/svg-png/mask/svg')
+}
+
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile 'com.android.support:appcompat-v7:26.+'
+}
